@@ -1,6 +1,6 @@
-package com.imyvm;
+package com.imyvm.Rewards;
 
-import com.imyvm.Commands.Commands;
+import com.imyvm.Rewards.Commands.Commands;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

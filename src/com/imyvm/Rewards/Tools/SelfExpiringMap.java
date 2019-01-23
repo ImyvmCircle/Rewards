@@ -1,4 +1,4 @@
-package com.imyvm.Tools;
+package com.imyvm.Rewards.Tools;
 /*
  * Copyright (c) 2018 Pierantonio Cangianiello
  *

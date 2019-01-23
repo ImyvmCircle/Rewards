@@ -1,6 +1,6 @@
 name: Rewards
 version: 0.1
-main: com.imyvm.Reward
+main: com.imyvm.Reward.Reward
 api-version: 1.13
 
 commands:

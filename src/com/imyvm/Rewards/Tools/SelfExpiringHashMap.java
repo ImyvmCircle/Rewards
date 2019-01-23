@@ -1,4 +1,4 @@
-package com.imyvm.Tools;
+package com.imyvm.Rewards.Tools;
 /*
  * Copyright (c) 2018 Pierantonio Cangianiello
  *
@@ -24,7 +24,6 @@ package com.imyvm.Tools;
  */
 import java.util.Collection;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;

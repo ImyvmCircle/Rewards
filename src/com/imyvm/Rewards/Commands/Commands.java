@@ -1,7 +1,7 @@
-package com.imyvm.Commands;
+package com.imyvm.Rewards.Commands;
 
-import com.imyvm.Reward;
-import com.imyvm.Tools.SelfExpiringHashMap;
+import com.imyvm.Rewards.Reward;
+import com.imyvm.Rewards.Tools.SelfExpiringHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
