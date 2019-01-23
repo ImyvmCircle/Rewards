@@ -60,12 +60,12 @@ public class Commands implements CommandExecutor {
             }
             long timestamp = new Date().getTime();
             String code = getRandomString();
-            player1.sendMessage("§b请输入指令§f/rw ac "+code+" §b获取当前奖励§f[§e"+args[2]+"§f], §b有效期: §f"+time/1000 +"§b 秒");
+            player1.sendMessage("§b请输入指令§f/rw ac " + code + " §b获取当前奖励§f[§e" + args[2] + "§f], §b有效期: §f" + timeGet(time));
 
             scheduler.runTaskTimerAsynchronously(plugin, () -> {
                 long timestamp_now = new Date().getTime();
                 long count = (time-timestamp_now+timestamp)/1000;
-                player1.sendMessage("§b请输入指令§f/rw ac "+code+" §b获取当前奖励§f[§e"+args[2]+"§f], §b剩余时间: §f"+count +"§b 秒");
+                player1.sendMessage("§b请输入指令§f/rw ac " + code + " §b获取当前奖励§f[§e" + args[2] + "§f], §b剩余时间: §f" + timeGet(count * 1000));
                 if (count<=0){
                     scheduler.cancelTasks(plugin);
                 }
@@ -203,6 +203,21 @@ public class Commands implements CommandExecutor {
             result.append( range.charAt( random.nextInt( range.length() ) ) );
         }
         return result.toString().toUpperCase();
+    }
+
+    private String timeGet(long c) {
+        long s = c / 1000;
+        String message = "";
+        if (s < 60) {
+            message = s + " 秒";
+        } else {
+            if (s % 60 == 0) {
+                message = s / 60 + "分钟";
+            } else {
+                message = s / 60 + "分钟" + s % 60 + "秒";
+            }
+        }
+        return message;
     }
 
 
