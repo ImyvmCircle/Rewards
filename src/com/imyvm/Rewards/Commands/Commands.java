@@ -1,7 +1,7 @@
 package com.imyvm.Rewards.Commands;
 
 import com.imyvm.Rewards.Reward;
-import com.imyvm.Rewards.Tools.SelfExpiringHashMap;
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +14,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Commands implements CommandExecutor {
     private Reward plugin;
@@ -26,7 +27,7 @@ public class Commands implements CommandExecutor {
     private static int time = Reward.getTime();
     private static int range = Reward.getRange();
     private static int mini = Reward.getMini();
-    private SelfExpiringHashMap<String, String> map = new SelfExpiringHashMap<>(time);
+    private PassiveExpiringMap<String, String> map = new PassiveExpiringMap<>(time);
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmdObj, String label, String[] args) {
@@ -65,11 +66,15 @@ public class Commands implements CommandExecutor {
             scheduler.runTaskTimerAsynchronously(plugin, () -> {
                 long timestamp_now = new Date().getTime();
                 long count = (time-timestamp_now+timestamp)/1000;
-                player1.sendMessage("§b请输入指令§f/rw ac " + code + " §b获取当前奖励§f[§e" + args[2] + "§f], §b剩余时间: §f" + timeGet(count * 1000));
-                if (count<=0){
+                if (count > 0) {
+                    player1.sendMessage("§b请输入指令§f/rw ac " + code + " §b获取当前奖励§f[§e" + args[2] + "§f], §b剩余时间: §f" + timeGet(count * 1000));
+                } else {
+                    if (count == 0) {
+                        player1.sendMessage("§4奖励已失效！");
+                    }
                     scheduler.cancelTasks(plugin);
                 }
-            }, time/250+60, time/250+60);
+            }, time / 250, time / 250);
 
             String value = args[2]+":"+code;
             String key = player1.getUniqueId().toString()+":"+code;
@@ -96,21 +101,30 @@ public class Commands implements CommandExecutor {
             }
             Player player = (Player) sender;
             String c = args[1].toUpperCase();
-            if (!map.containsKey(player.getUniqueId().toString()+":"+c)){
-                sender.sendMessage("§4当前没有奖励存在或代码错误！");
+            Set<String> uuidReward = map.entrySet()
+                    .stream()
+                    .filter(stringStringEntry -> stringStringEntry.getKey().startsWith(player.getUniqueId().toString()))
+                    .map(Map.Entry::getValue)
+                    .collect(Collectors.toSet());
+            if (uuidReward.isEmpty()) {
+                sender.sendMessage("§4当前没有奖励存在(超时)！");
                 return false;
-            }else {
-                String reward = map.get(player.getUniqueId().toString()+":"+c);
-                List<String> it = new ArrayList<>(Arrays.asList(reward.split(":")));
-                String code_id = it.get(1);
-                if (!args[1].equalsIgnoreCase(code_id)){
-                    sender.sendMessage("§4请输入正确的奖励代码！");
+            } else {
+                if (!map.containsKey(player.getUniqueId().toString() + ":" + c)) {
+                    sender.sendMessage("§4代码错误,请输入正确的奖励代码！");
                     return false;
                 }
-                boolean success = runRewards(it.get(0), player);
+                String reward = map.get(player.getUniqueId().toString()+":"+c);
+                List<String> it = new ArrayList<>(Arrays.asList(reward.split(":")));
+
+                if (!runRewards(it.get(0), player)) {
+                    sender.sendMessage("§4奖励发放错误，请联系管理员！");
+                    return false;
+                }
+                ;
                 map.remove(player.getUniqueId().toString());
                 scheduler.cancelTasks(plugin);
-                return success;
+                return true;
             }
         }
 
@@ -209,7 +223,7 @@ public class Commands implements CommandExecutor {
         long s = c / 1000;
         String message = "";
         if (s < 60) {
-            message = s + " 秒";
+            message = s + "秒";
         } else {
             if (s % 60 == 0) {
                 message = s / 60 + "分钟";

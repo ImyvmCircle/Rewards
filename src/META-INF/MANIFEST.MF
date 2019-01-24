@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: commons-collections4-4.2.jar commons-collections4-4.2-test
+ s.jar commons-collections4-4.2-javadoc.jar commons-collections4-4.2-s
+ ources.jar commons-collections4-4.2-test-sources.jar spigot-1.13.2.ja
+ r
+
