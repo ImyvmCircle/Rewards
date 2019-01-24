@@ -1,9 +1,0 @@
-name: Rewards
-version: 0.1
-main: com.imyvm.Rewards.Reward
-api-version: 1.13
-
-commands:
-  rw:
-    description: All commands
-    aliases: [rewards]
