@@ -3,6 +3,7 @@ package com.imyvm.Rewards.Commands;
 import com.imyvm.Rewards.Reward;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -121,14 +122,19 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage("§4奖励发放错误，请联系管理员！");
                     return false;
                 }
-                ;
-                map.remove(player.getUniqueId().toString());
+                map.remove(player.getUniqueId().toString() + ":" + c);
                 scheduler.cancelTasks(plugin);
                 return true;
             }
         }
-
-
+        if (cmd.equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("rewards.add")) {
+                sender.sendMessage("§4You don't have this permission!");
+                return false;
+            }
+            plugin.reloadConfig();
+            sender.sendMessage(ChatColor.GREEN + "Configuration Reloaded!");
+        }
         return true;
     }
 
